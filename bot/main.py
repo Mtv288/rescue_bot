@@ -14,7 +14,7 @@ from bot.handlers import (
     groups,
     stats,
     my_groups,
-    admin_requests,  # ✅ добавлено
+    admin_requests,
 )
 
 async def main():

@@ -12,12 +12,15 @@ def start_menu_keyboard() -> InlineKeyboardMarkup:
 
 
 def main_menu_keyboard(role: str) -> InlineKeyboardMarkup:
-    kb = []
-    kb.append([InlineKeyboardButton(text='📍 Отправить геолокацию', callback_data='send_location')])
-    kb.append([InlineKeyboardButton(text='📖 Полезные материалы', callback_data='materials')])
+    kb = [
+        [InlineKeyboardButton(text='📍 Отправить геолокацию', callback_data='send_location')],
+        [InlineKeyboardButton(text='📖 Полезные материалы', callback_data='materials')],
+    ]
     if role in ['admin', 'chief']:
-        kb.insert(0, [InlineKeyboardButton(text='➕ Добавить материал', callback_data='add_material')])
-        kb.insert(1, [InlineKeyboardButton(text='👥 Управление пользователями', callback_data='manage_users')])
+        kb.append([InlineKeyboardButton(text='➕ Добавить материал', callback_data='add_material')])
+        kb.append([InlineKeyboardButton(text='➕ Добавить задачу', callback_data='create_task')])
+        kb.append([InlineKeyboardButton(text='➕ Создать группу', callback_data='add_group')])
+        kb.append([InlineKeyboardButton(text='👥 Управление пользователями', callback_data='manage_users')])
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
@@ -47,7 +50,7 @@ def admin_menu_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📌 Задать задачу", callback_data="create_task")],
         [InlineKeyboardButton(text="📋 Заявки на регистрацию", callback_data="view_requests")],
-        [InlineKeyboardButton(text="👤 Пользователи", callback_data="manage_users")],
+        [InlineKeyboardButton(text="👤 Пользователи", callback_data="show_users")],
         [InlineKeyboardButton(text="🛠 Настройки", callback_data="admin_settings")]
     ])
 
@@ -59,3 +62,5 @@ def pending_user_keyboard(user_id: int) -> InlineKeyboardMarkup:
             InlineKeyboardButton(text="❌ Отклонить", callback_data=f"reject_user:{user_id}")
         ]
     ])
+
+InlineKeyboardButton(text="Пользователи", callback_data="show_users")

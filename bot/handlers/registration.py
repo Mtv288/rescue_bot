@@ -3,6 +3,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
+from bot.keyboards.inline_buttons import main_menu_keyboard
 from bot.states import Registration
 from bot.database.base import Session
 from bot.database.models import User
@@ -17,6 +18,20 @@ def get_main_menu():
             [KeyboardButton(text="ℹ️ Профиль"), KeyboardButton(text="🔧 Настройки")]
         ],
         resize_keyboard=True
+    )
+
+@router.message(F.text == "📋 Меню")
+async def show_main_menu(message: Message):
+    session = Session()
+    user = session.query(User).filter_by(tg_id=message.from_user.id).first()
+    session.close()
+
+    if not user:
+        return await message.answer("❌ Вы не зарегистрированы. Пожалуйста, зарегистрируйтесь.")
+
+    await message.answer(
+        text=f"👋 Привет, {user.call_sign}! Вот ваше меню:",
+        reply_markup=main_menu_keyboard(user.role)
     )
 
 # Старт регистрации

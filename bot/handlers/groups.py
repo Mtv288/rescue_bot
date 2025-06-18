@@ -8,14 +8,7 @@ from bot.database.models import User, Group, Task
 
 router = Router()
 
-# 📌 Меню задач
-@router.message(F.text == "/задачи")
-async def show_task_menu(message: Message):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📌 Задать задачу", callback_data="create_task")],
-        [InlineKeyboardButton(text="👥 Просмотр заявок", callback_data="view_pending_users")]
-    ])
-    await message.answer("Меню задач и заявок:", reply_markup=keyboard)
+
 
 # 🚀 Начать создание задачи
 @router.callback_query(F.data == "create_task")
@@ -24,7 +17,7 @@ async def select_group(callback: CallbackQuery, state: FSMContext):
     admin = session.query(User).filter_by(tg_id=callback.from_user.id).first()
     groups = session.query(Group).filter(
         (Group.leader_id == admin.id) |
-        (admin.role == "шеф")
+        (admin.role == "chief")
     ).all()
     session.close()
 
