@@ -1,16 +1,17 @@
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from bot.states import AddMaterial
 
 router = Router()
 materials = []
 
-@router.message(Command("добавитьматериал"))
-async def add_material(message: Message, state: FSMContext):
-    await message.answer("Введите название материала:")
+@router.callback_query(F.data == "add_material")
+async def add_material_callback(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Введите название материала:")
     await state.set_state(AddMaterial.title)
+    await callback.answer()
 
 @router.message(AddMaterial.title)
 async def get_title(message: Message, state: FSMContext):
