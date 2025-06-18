@@ -51,3 +51,9 @@ class JoinGroupRequest(StatesGroup):
 class TaskReport(StatesGroup):
     task_id = State()
     report_text = State()
+
+# 🔹 Добавление ссылки без названия (только URL)
+class AddMaterial(StatesGroup):
+    title = State()
+    url = State()
+    direct_url = State()

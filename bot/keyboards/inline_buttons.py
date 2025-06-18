@@ -20,7 +20,8 @@ def main_menu_keyboard(role: str) -> InlineKeyboardMarkup:
         kb.append([InlineKeyboardButton(text='➕ Добавить материал', callback_data='add_material')])
         kb.append([InlineKeyboardButton(text='➕ Добавить задачу', callback_data='create_task')])
         kb.append([InlineKeyboardButton(text='➕ Создать группу', callback_data='add_group')])
-        kb.append([InlineKeyboardButton(text='👥 Управление пользователями', callback_data='manage_users')])
+
+        kb.append([InlineKeyboardButton(text='📖 Добавить полезные материалы', callback_data='add_url_material')])
     return InlineKeyboardMarkup(inline_keyboard=kb)
 
 

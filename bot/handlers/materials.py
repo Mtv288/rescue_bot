@@ -31,5 +31,36 @@ async def show_materials(message: Message):
     if not materials:
         await message.answer("Материалов пока нет.")
         return
-    text = "📚 Полезные материалы:\n" + "\n".join(f"- <a href='{url}'>{title}</a>" for title, url in materials)
-    await message.answer(text)
+    text = "📚 Полезные материалы:\n" + "\n".join(
+        f"- <a href='{url}'>{title}</a>" for title, url in materials
+    )
+    await message.answer(text, parse_mode="HTML", disable_web_page_preview=False)
+
+
+@router.callback_query(F.data == "add_url_material")
+async def ask_direct_url(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Отправьте ссылку на материал:")
+    await state.set_state(AddMaterial.direct_url)
+    await callback.answer()
+
+@router.message(AddMaterial.direct_url)
+async def save_direct_url(message: Message, state: FSMContext):
+    url = message.text.strip()
+    if not url.startswith("http"):
+        await message.answer("Пожалуйста, отправьте корректную ссылку (начинается с http).")
+        return
+    materials.append((url, url))  # Название и ссылка одинаковы
+    await message.answer("✅ Ссылка добавлена в материалы.")
+    await state.clear()
+
+@router.callback_query(F.data == "materials")
+async def show_materials_callback(callback: CallbackQuery):
+    if not materials:
+        await callback.message.answer("Материалов пока нет.")
+        await callback.answer()  # просто закрываем "часики"
+        return
+    text = "📚 Полезные материалы:\n" + "\n".join(
+        f"- <a href='{url}'>{title}</a>" for title, url in materials
+    )
+    await callback.message.answer(text, parse_mode="HTML", disable_web_page_preview=False)
+    await callback.answer()
